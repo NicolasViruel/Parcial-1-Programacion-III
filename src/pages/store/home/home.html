@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Store - Catalogo</title>
+    <script>
+      (function () {
+        const LOGIN_PATH = "/src/pages/auth/login/login.html";
+        const ADMIN_HOME_PATH = "/src/pages/admin/home/home.html";
+
+        try {
+          const userRaw = localStorage.getItem("userData");
+          if (!userRaw) {
+            window.location.replace(LOGIN_PATH);
+            return;
+          }
+
+          const user = JSON.parse(userRaw);
+          if (user?.role !== "client") {
+            window.location.replace(ADMIN_HOME_PATH);
+          }
+        } catch {
+          window.location.replace(LOGIN_PATH);
+        }
+      })();
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f5f7;
+        color: #1f2937;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        background: #111827;
+        color: #fff;
+      }
+      .header-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      button,
+      a {
+        border: 0;
+        border-radius: 0.5rem;
+        padding: 0.55rem 0.9rem;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.95rem;
+      }
+      .btn-secondary {
+        background: #374151;
+        color: #fff;
+      }
+      .btn-primary {
+        background: #2563eb;
+        color: #fff;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      .sidebar {
+        background: #fff;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        height: fit-content;
+      }
+      .categories {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .category-btn.active {
+        background: #111827;
+        color: #fff;
+      }
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      #searchInput {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+      }
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        background: #fff;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+      }
+      .card-body {
+        padding: 0.9rem;
+      }
+      .card-title {
+        margin: 0;
+      }
+      .card-description {
+        margin: 0.5rem 0;
+        color: #6b7280;
+      }
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #feedback {
+        min-height: 1.2rem;
+        color: #0f766e;
+        font-weight: 700;
+      }
+      #emptyState {
+        display: none;
+        background: #fff;
+        border-radius: 0.75rem;
+        padding: 1rem;
+      }
+      @media (max-width: 860px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Food Store</h1>
+      <div class="header-actions">
+        <a class="btn-primary" href="/src/pages/store/cart/cart.html">Ver carrito</a>
+        <button id="logoutButton" class="btn-secondary">Logout</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <h2>Categorias</h2>
+        <div id="categoriesContainer" class="categories"></div>
+      </aside>
+
+      <section class="content">
+        <input id="searchInput" type="text" placeholder="Buscar por nombre..." />
+        <p id="feedback"></p>
+        <div id="emptyState">No se encontraron productos con esos filtros.</div>
+        <div id="productsContainer" class="products-grid"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./home.ts"></script>
+  </body>
+</html>

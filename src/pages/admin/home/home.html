@@ -5,6 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script>
+        (function () {
+            const LOGIN_PATH = "/src/pages/auth/login/login.html";
+            const CLIENT_HOME_PATH = "/src/pages/store/home/home.html";
+
+            try {
+                const userRaw = localStorage.getItem("userData");
+                if (!userRaw) {
+                    window.location.replace(LOGIN_PATH);
+                    return;
+                }
+
+                const user = JSON.parse(userRaw);
+                if (user?.role !== "admin") {
+                    window.location.replace(CLIENT_HOME_PATH);
+                }
+            } catch {
+                window.location.replace(LOGIN_PATH);
+            }
+        })();
+    </script>
 </head>
 
 <body>
