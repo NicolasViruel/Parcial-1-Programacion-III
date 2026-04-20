@@ -49,7 +49,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 5,
     name: "Limonada",
-    description: "Limonada natural bien fria.",
+    description: "Limonada natural bien fria. Menta y Jengibre a eleccion",
     price: 3200,
     categoryId: "drinks",
     image:
