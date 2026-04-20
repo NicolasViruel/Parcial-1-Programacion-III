@@ -1,83 +1,119 @@
-# Proyecto: Protección de Rutas (Educativo)
+# Parcial 1 - Programacion III - Food Store
 
-## ✍️ Descripción
+## Descripcion breve
 
-Este es un proyecto de demostración creado con fines educativos para ilustrar un mecanismo básico de protección de rutas en el lado del cliente (frontend) utilizando **Vite** y **TypeScript**.
+Este proyecto corresponde al **Primer Parcial de Programacion III** y fue desarrollado sobre el repositorio base provisto por la catedra (`Vite + TypeScript`).
 
-El objetivo es mostrar cómo se puede restringir el acceso a ciertas páginas según el rol de un usuario (por ejemplo, `ADMIN` o `CLIENT`).
+La aplicacion implementa un flujo frontend para una tienda de comida (`Food Store`) con:
 
----
+- proteccion basica de rutas por rol (`admin` y `client`),
+- catalogo de productos renderizado dinamicamente,
+- busqueda por nombre,
+- filtrado por categoria,
+- carrito con persistencia en `localStorage`,
+- vista de carrito con cantidades y total acumulado.
 
-## ⚠️ ¡Importante! Nivel de Seguridad
+> Importante: la autenticacion y la proteccion de rutas estan simuladas en frontend con `localStorage`, por lo que es una solucion educativa y no de produccion.
 
-La protección de rutas implementada en este proyecto **NO ES SEGURA** y no debe utilizarse en un entorno de producción.
+## Funcionalidades implementadas
 
-- **Razón**: La lógica de autenticación se basa en datos guardados en `localStorage` en el navegador del usuario.
-- **Riesgo**: Cualquier usuario con conocimientos técnicos básicos puede abrir las herramientas de desarrollador del navegador para inspeccionar, modificar o eliminar los datos de `localStorage`, obteniendo así acceso no autorizado a rutas protegidas.
+### 1) Catalogo de productos
 
-Este enfoque es útil únicamente para fines de aprendizaje y para prototipos de bajo riesgo. La seguridad real debe implementarse en el **backend**.
+- Renderizado dinamico desde `src/data/data.ts`.
+- Visualizacion de nombre, descripcion, precio e imagen por producto.
 
----
+### 2) Busqueda y filtrado
 
-## 🚀 Instalación y Uso
+- Busqueda de productos por nombre (coincidencia parcial).
+- Filtro por categoria desde un menu lateral.
+- Mensaje visual cuando no hay coincidencias.
 
-Se recomienda usar `pnpm` como gestor de paquetes para mayor eficiencia en el manejo de dependencias.
+### 3) Carrito con persistencia
 
-### 1. Instalar pnpm
+- Agregado de productos desde el catalogo.
+- Persistencia en `localStorage` (key: `storeCart`).
+- Si un producto ya existe en carrito, aumenta cantidad en lugar de duplicarlo.
 
-Si no tienes `pnpm` instalado, puedes hacerlo fácilmente a través de `npm` (que viene con Node.js) ejecutando el siguiente comando en tu terminal:
+### 4) Vista de carrito y total
+
+- Visualizacion de nombre, precio, cantidad y subtotal por item.
+- Edicion de cantidades y eliminacion de productos.
+- Calculo del total general del carrito en tiempo real.
+
+### 5) Proteccion de rutas
+
+- Control de acceso por rol usando `checkAuhtUser` y verificacion temprana en HTML.
+- Redireccion a login si no existe sesion.
+- Redireccion por rol cuando se intenta acceder a una ruta no permitida.
+
+## Tecnologias utilizadas
+
+- HTML5
+- CSS3
+- JavaScript
+- TypeScript
+- Vite
+
+## Instalacion y ejecucion
+
+### 1. Clonar repositorio
+
+```bash
+git clone <URL_DE_TU_REPO>
+cd proteger_rutas
+```
+
+### 2. Instalar pnpm (si no esta instalado)
 
 ```bash
 npm install -g pnpm
 ```
 
-### 2. Instalar Dependencias del Proyecto
-
-Una vez en la carpeta raíz del proyecto, instala las dependencias necesarias con `pnpm`:
+### 3. Instalar dependencias
 
 ```bash
 pnpm install
 ```
 
-### 3. Ejecutar el Proyecto
-
-Para iniciar el servidor de desarrollo de Vite, ejecuta:
+### 4. Ejecutar entorno de desarrollo
 
 ```bash
 pnpm dev
 ```
 
-La aplicación estará disponible en la URL que aparezca en la terminal (generalmente `http://localhost:5173`).
+La app quedara disponible en la URL que muestre la terminal (generalmente `http://localhost:5173`).
 
----
+### 5. Build de produccion (opcional)
 
-## ⚙️ ¿Cómo Funciona la Protección de Rutas?
-
-El mecanismo es simple y se gestiona desde el código TypeScript en la carpeta `src/utils`:
-
-1.  **Inicio de Sesión**: Cuando un usuario se "loguea", su información (incluido su rol) se guarda como un string JSON en `localStorage`.
-2.  **Carga de Página Protegida**: Cada vez que se intenta cargar una página protegida (ej. la página de Administrador), se ejecuta un script de verificación (`checkAuhtUser` en `src/utils/auth.ts`).
-3.  **Verificación**: El script comprueba:
-    - Si existe un usuario en `localStorage`. Si no, redirige al login.
-    - Si el rol del usuario guardado coincide con el rol requerido para acceder a esa página. Si no coincide, lo redirige a una página de acceso denegado o a su "home" correspondiente.
-4.  **Cierre de Sesión (Logout)**: Al cerrar sesión, la información del usuario se elimina de `localStorage`.
-
----
-
-## 📁 Estructura del Proyecto
-
+```bash
+pnpm build
 ```
-/
-├── src/
-│   ├── pages/                # Contiene las páginas de la aplicación
-│   │   ├── admin/            # Páginas solo para administradores
-│   │   ├── auth/             # Páginas de autenticación (login, registro)
-│   │   └── client/           # Páginas solo para clientes
-│   ├── types/                # Define las interfaces y tipos (IUser, Rol)
-│   └── utils/                # Lógica reutilizable
-│       ├── auth.ts           # Función principal de verificación de rol y sesión
-│       ├── localStorage.ts   # Funciones para leer/escribir en localStorage
-│       └── navigate.ts       # Función para redirigir al usuario
-├── package.json              # Dependencias y scripts
-└── README.md                 # Este archivo
+
+## Estructura principal del proyecto
+
+```text
+src/
+├── data/
+│   └── data.ts
+├── pages/
+│   ├── admin/
+│   │   └── home/
+│   ├── auth/
+│   │   ├── login/
+│   │   └── registro/
+│   ├── client/
+│   │   └── home/
+│   └── store/
+│       ├── home/
+│       └── cart/
+├── types/
+│   ├── IUser.ts
+│   ├── Rol.ts
+│   ├── categoria.ts
+│   └── product.ts
+└── utils/
+    ├── auth.ts
+    ├── cart.ts
+    ├── localStorage.ts
+    └── navigate.ts
 ```
